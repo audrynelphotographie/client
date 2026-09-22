@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal | Audry Nel Photography</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <p class="eyebrow">AUDRY NEL PHOTOGRAPHY</p>
+      <h1>Admin Portal</h1>
+      <p class="muted">Private management dashboard</p>
+      <form id="loginForm">
+        <label>Username</label>
+        <input id="adminUsername" type="text" autocomplete="username" required>
+        <label>Admin code</label>
+        <input id="adminCode" type="password" autocomplete="current-password" required>
+        <button class="gold-btn" type="submit">LOGIN</button>
+        <p id="loginError" class="error"></p>
+      </form>
+      <a class="back-link" href="./index.html">← Back to galleries</a>
+    </div>
+  </div>
+
+  <div id="adminApp" class="admin-layout hidden">
+    <aside id="sidebar" class="sidebar">
+      <div class="admin-brand">
+        <strong>AUDRY NEL</strong>
+        <span>PHOTOGRAPHY</span>
+      </div>
+      <nav>
+        <button class="nav-item active" data-section="dashboard">Dashboard</button>
+        <button class="nav-item" data-section="clients">Clients</button>
+        <button class="nav-item" data-section="create">Create Gallery</button>
+        <button class="nav-item" data-section="activity">Activity</button>
+      </nav>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </aside>
+
+    <main class="admin-main">
+      <header class="topbar">
+        <div>
+          <button id="menuToggle" class="menu-toggle">☰</button>
+          <div class="top-title">
+            <p class="eyebrow">ADMIN DASHBOARD</p>
+            <h1 id="pageTitle">Dashboard</h1>
+          </div>
+        </div>
+        <a href="./index.html" class="view-site">View Client Site ↗</a>
+      </header>
+
+      <section id="section-dashboard" class="admin-section">
+        <div class="stats-grid">
+          <div class="stat-card"><span>Total Clients</span><strong id="statClients">0</strong></div>
+          <div class="stat-card"><span>Total Galleries</span><strong id="statGalleries">0</strong></div>
+          <div class="stat-card"><span>Total Photos</span><strong id="statPhotos">0</strong></div>
+          <div class="stat-card"><span>Recent Activity</span><strong id="statActivity">0</strong></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div><h2>Recent Activity</h2><p>Latest client and admin actions.</p></div></div>
+          <div id="dashboardActivity" class="activity-list"></div>
+        </div>
+      </section>
+
+      <section id="section-clients" class="admin-section hidden">
+        <div class="panel">
+          <div class="panel-head">
+            <div><h2>Clients</h2><p>Manage all client galleries.</p></div>
+            <button class="gold-btn" data-go-section="create">+ Create Gallery</button>
+          </div>
+          <input id="clientFilter" class="search-input" placeholder="Search clients or events...">
+          <div id="adminClientList" class="client-admin-list"></div>
+        </div>
+      </section>
+
+      <section id="section-create" class="admin-section hidden">
+        <div class="panel">
+          <div class="panel-head"><div><h2 id="formTitle">Create Gallery</h2><p>Add a client and their ImgBB photos.</p></div></div>
+          <form id="clientForm">
+            <input type="hidden" id="editOriginalId">
+            <div class="form-grid">
+              <div><label>Client name</label><input id="clientName" required placeholder="Diane & Kevin"></div>
+              <div><label>Event</label><input id="clientEvent" placeholder="Wedding Photography"></div>
+              <div><label>Date</label><input id="clientDate" placeholder="25 June 2026"></div>
+              <div><label>Client slug</label><input id="clientSlug" required placeholder="diane-kevin"></div>
+              <div><label>Access code</label><input id="clientCode" required placeholder="DK2026"></div>
+              <div><label>Cover ImgBB URL</label><input id="clientCover" required placeholder="https://i.ibb.co/..."></div>
+            </div>
+
+            <div class="photo-editor">
+              <div class="photo-editor-head">
+                <div><h3>Photos HD</h3><p>Ajoute plusieurs liens ImgBB HD, un par ligne.</p></div>
+                <button id="addPhotoBtn" type="button" class="ghost-btn">+ Add Photo</button>
+              </div>
+              <div class="bulk-links">
+                <label>Liens ImgBB HD — un lien par ligne</label>
+                <textarea id="bulkStandardLinks" placeholder="https://i.ibb.co/xxxx/photo001.jpg
+https://i.ibb.co/xxxx/photo002.jpg
+https://i.ibb.co/xxxx/photo003.jpg"></textarea>
+                <button id="addBulkLinksBtn" type="button" class="gold-btn">ADD HD LINKS</button>
+              </div>
+              <div id="photoRows"></div>
+            </div>
+
+            <div class="form-actions">
+              <button type="button" id="cancelEdit" class="ghost-btn">Cancel</button>
+              <button type="submit" class="gold-btn">Save Gallery</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="section-activity" class="admin-section hidden">
+        <div class="panel">
+          <div class="panel-head"><div><h2>Activity</h2><p>Recent access and management activity.</p></div></div>
+          <div id="fullActivity" class="activity-list"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./contentclient.js"></script>
+  <script src="./admin.js"></script>
+</body>
+</html>
