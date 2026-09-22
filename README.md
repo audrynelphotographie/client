@@ -48,3 +48,15 @@ The admin accepts many ImgBB URLs, one URL per line. It saves them as the galler
 
 ### WhatsApp link preview
 A static GitHub Pages SPA cannot dynamically change `og:image` for every client path before WhatsApp's crawler reads the page. The default `/cover.jpg` is therefore used. Per-client WhatsApp previews require a server/edge function that generates route-specific Open Graph metadata.
+
+
+## Admin portal fix
+If Admin Portal opens but SAVE/DELETE fails, that is normally Firestore Security Rules rejecting frontend writes. See `firestore-rules-admin-setup.txt`.
+
+## Share link fix
+The Share button now shares ONLY:
+`https://client.audrynel.com/<slug>`
+
+The client access code is never included in the URL or in the share payload.
+
+A cover image may still appear in WhatsApp's link preview. That is normal Open Graph preview behavior and is not the access code. Route-specific WhatsApp cover previews require server/edge-generated Open Graph metadata.

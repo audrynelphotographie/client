@@ -105,8 +105,14 @@ $("#downloadAllBtn").onclick=async()=>{
 };
 async function shareClient(c){
   const url=location.origin+"/"+(c.slug||c.id);
-  if(navigator.share){try{await navigator.share({title:c.name+" | Audry Nel Photography",text:"View your private gallery",url})}catch{}}
-  else{await navigator.clipboard.writeText(url);showToast("Gallery link copied.");}
+  if(navigator.share){
+    try{
+      await navigator.share({title:c.name+" | Audry Nel Photography",url});
+    }catch{}
+  } else {
+    try{await navigator.clipboard.writeText(url);showToast("Gallery link copied.");}
+    catch{prompt("Copy this gallery link:",url);}
+  }
 }
 $("#shareBtn").onclick=()=>current&&shareClient(current);
 loadClients();
