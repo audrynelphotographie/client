@@ -1,0 +1,7 @@
+<!doctype html><html><body style="background:#090909;color:white;font-family:Arial;padding:30px">
+<h2>Audry Nel Admin Test</h2><p id="x">Testing Firebase module...</p>
+<script type="module">
+import {db,collection,getDocs} from "./admin-firebase.js";
+try{await getDocs(collection(db,"clients"));document.querySelector("#x").textContent="Firebase connection OK. Admin module is loading correctly."}
+catch(e){document.querySelector("#x").textContent="Firebase loaded, but Firestore read failed: "+e.message;console.error(e)}
+</script></body></html>
