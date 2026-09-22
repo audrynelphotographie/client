@@ -1,89 +1,23 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Admin Portal | Audry Nel Photography</title><link rel="stylesheet" href="/styles.css"><style>
-.admin{max-width:1100px;margin:auto;padding:55px 4%}.panel{background:#121216;border:1px solid #2d2a31;border-radius:18px;padding:24px;margin:18px 0}.form{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.form input,.form textarea{width:100%;background:#08080a;color:#fff;border:1px solid #3a3740;border-radius:9px;padding:12px}.form textarea{grid-column:1/-1;min-height:180px}.full{grid-column:1/-1}.list{display:grid;gap:10px}.item{display:flex;justify-content:space-between;gap:15px;align-items:center;padding:12px;border:1px solid #2d2a31;border-radius:10px}.small{color:#999;font-size:12px}.error{color:#e88b8b}.ok{color:#c9a646}@media(max-width:700px){.form{grid-template-columns:1fr}.full{grid-column:auto}.item{align-items:flex-start;flex-direction:column}}
-</style></head>
-<body><header class="topbar"><a class="brand" href="/">AUDRY NEL<small>PHOTOGRAPHY</small></a><a class="admin-link" href="/">GALLERIES</a></header>
-<main class="admin"><div class="eyebrow">AUDRY NEL PHOTOGRAPHY</div><h1 style="font:600 52px 'Playfair Display',serif">Admin Portal</h1>
-
-<section id="login" class="panel"><h2>Admin Login</h2><p class="small">Enter the administrator credentials.</p>
-<div class="form"><input id="user" autocomplete="username" placeholder="Username"><input id="pass" type="password" autocomplete="current-password" placeholder="Admin code"><button id="loginBtn" class="btn gold full">LOGIN</button></div>
-<p id="loginMsg" class="error"></p></section>
-
-<section id="dash" class="hidden">
-<div class="panel"><h2>Create / update client gallery</h2><div class="form">
-<input id="slug" placeholder="Slug e.g. wilson-audry"><input id="name" placeholder="Client name"><input id="event" placeholder="Event"><input id="date" placeholder="Date"><input id="code" placeholder="Client access code"><input id="cover" placeholder="Cover image URL">
-<textarea id="links" placeholder="Paste ImgBB HD image links, one per line"></textarea>
-<button id="save" class="btn gold">SAVE GALLERY</button><button id="clear" class="btn secondary">CLEAR</button><button id="logout" class="btn secondary full">LOG OUT</button>
-</div><p id="msg" class="small"></p></div>
-<div class="panel"><h2>Existing galleries</h2><div id="list" class="list"></div></div>
-</section></main>
-
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Audry Nel Admin Dashboard</title><link rel="stylesheet" href="/styles.css"><style>
+body{background:#080808}.wrap{max-width:1400px;margin:auto;padding:30px 4% 70px}.nav{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #29272d;padding-bottom:25px}.nav h1{font:600 42px "Playfair Display",serif;margin:4px 0}.muted{color:#92909a}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:22px 0}.stat,.panel{background:#111114;border:1px solid #2b2930;border-radius:17px;padding:20px}.stat small{color:#888;text-transform:uppercase;letter-spacing:2px;font-size:9px}.stat b{display:block;font-size:30px;margin:8px 0}.stat span{color:#c9a646;font-size:11px}.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}.form{display:grid;grid-template-columns:1fr 1fr;gap:10px}.form input,.form textarea,.search{background:#08080a;color:white;border:1px solid #39363e;border-radius:10px;padding:12px;width:100%;outline:0}.form textarea{grid-column:1/-1;min-height:150px}.full{grid-column:1/-1}.list{display:grid;gap:9px;max-height:700px;overflow:auto}.row{display:grid;grid-template-columns:58px 1fr auto;gap:10px;align-items:center;border:1px solid #29272d;border-radius:11px;padding:9px}.row img{width:58px;height:58px;object-fit:cover;border-radius:8px}.row h3{margin:0;font-size:14px}.row p{margin:4px 0;color:#888;font-size:10px}.preview{margin-top:18px;border:1px solid #2b2930;border-radius:14px;overflow:hidden}.preview>img{width:100%;height:250px;object-fit:cover}.preview-body{padding:16px}.preview-body h2{font:600 25px "Playfair Display",serif;margin:0}.photos{display:grid;grid-template-columns:repeat(5,1fr);gap:4px}.photos img{width:100%;aspect-ratio:1;object-fit:cover}.login{min-height:75vh;display:grid;place-items:center}.loginbox{width:min(430px,92%);background:#111114;border:1px solid #463b22;border-radius:20px;padding:30px}.loginbox input{display:block;width:100%;margin:8px 0;background:#08080a;color:#fff;border:1px solid #39363e;border-radius:10px;padding:13px}.hidden{display:none!important}.err{color:#e28a8a}.ok{color:#c9a646}@media(max-width:900px){.cols{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}}@media(max-width:600px){.wrap{padding:20px 14px}.nav h1{font-size:31px}.stats{gap:8px}.stat{padding:14px}.stat b{font-size:24px}.form{grid-template-columns:1fr}.full{grid-column:auto}.row{grid-template-columns:48px 1fr}.row img{width:48px;height:48px}.row .acts{grid-column:1/-1}}
+</style></head><body>
+<header class="topbar"><a class="brand" href="/">AUDRY NEL<small>PHOTOGRAPHY</small></a><a class="admin-link" href="/">GALLERIES</a></header>
+<div id="login" class="login"><div class="loginbox"><div class="eyebrow">SECURE ADMIN PORTAL</div><h1 style="font:600 38px 'Playfair Display',serif">Admin Dashboard</h1><p class="muted">Manage your client galleries professionally.</p><input id="u" placeholder="Username"><input id="p" type="password" placeholder="Admin code"><button id="in" class="btn gold wide">LOGIN</button><p id="e" class="err"></p></div></div>
+<main id="app" class="wrap hidden"><div class="nav"><div><div class="eyebrow">CONTROL CENTER</div><h1>Dashboard</h1><div class="muted">Client delivery management</div></div><button id="out" class="btn secondary">LOG OUT</button></div>
+<div class="stats"><div class="stat"><small>Galleries</small><b id="s1">0</b><span>clients</span></div><div class="stat"><small>Photos</small><b id="s2">0</b><span>delivered</span></div><div class="stat"><small>Covers</small><b id="s3">0</b><span>gallery covers</span></div><div class="stat"><small>Updated</small><b id="s4">—</b><span>latest</span></div></div>
+<div class="cols"><section class="panel"><h2 id="ft">Create gallery</h2><div class="form"><input id="slug" placeholder="Slug: wilson-audry"><input id="name" placeholder="Client name"><input id="event" placeholder="Event"><input id="date" placeholder="Date"><input id="code" placeholder="Client access code"><input id="cover" placeholder="Cover image URL"><textarea id="links" placeholder="ImgBB HD links — one per line"></textarea><button id="save" class="btn gold">SAVE GALLERY</button><button id="clear" class="btn secondary">CLEAR</button></div><p id="msg" class="muted"></p><div id="pv" class="preview hidden"><img id="pvc"><div class="preview-body"><h2 id="pvn"></h2><p id="pvm" class="muted"></p><small id="pvp" class="ok"></small><div id="pvpics" class="photos"></div></div></div></section>
+<section class="panel"><h2>Client list</h2><input id="q" class="search" placeholder="Search client / event"><div id="list" class="list" style="margin-top:12px"></div></section></div></main>
 <script type="module">
-import {db,collection,getDocs,doc,setDoc,deleteDoc} from "./admin-firebase.js";
-const ADMIN_USER="Audrynel", ADMIN_CODE="carly62652177";
-const $=s=>document.querySelector(s);
-
-function showDashboard(){
-  $("#login").classList.add("hidden"); $("#dash").classList.remove("hidden"); load();
-}
-$("#loginBtn").onclick=()=>{
-  const ok=$("#user").value.trim()===ADMIN_USER && $("#pass").value===ADMIN_CODE;
-  if(ok){sessionStorage.setItem("audry_admin","1");showDashboard();}
-  else $("#loginMsg").textContent="Username or admin code is incorrect.";
-};
-$("#logout").onclick=()=>{sessionStorage.removeItem("audry_admin");location.reload()};
-if(sessionStorage.getItem("audry_admin")==="1") showDashboard();
-
-$("#clear").onclick=clearForm;
-
-$("#save").onclick=async()=>{
-  const slug=$("#slug").value.trim().toLowerCase().replace(/[^a-z0-9-]+/g,"-").replace(/^-|-$/g,"");
-  const name=$("#name").value.trim();
-  const accessCode=$("#code").value.trim();
-  if(!slug||!name||!accessCode){$("#msg").textContent="Slug, client name and client code are required.";$("#msg").className="error";return}
-  const photos=$("#links").value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).map((url,i)=>({url,name:`photo-${i+1}.jpg`}));
-  try{
-    await setDoc(doc(db,"clients",slug),{
-      slug,name,event:$("#event").value.trim(),date:$("#date").value.trim(),
-      accessCode,cover:$("#cover").value.trim()||photos[0]?.url||"",photos,
-      updatedAt:new Date().toISOString()
-    },{merge:true});
-    $("#msg").textContent=`Saved successfully: https://client.audrynel.com/${slug}`;
-    $("#msg").className="ok"; clearForm(false); load();
-  }catch(e){
-    console.error(e);
-    $("#msg").textContent="SAVE FAILED: Firestore rejected the write. Check your Firestore Rules.";
-    $("#msg").className="error";
-  }
-};
-
-function clearForm(clearMsg=true){
-  ["slug","name","event","date","code","cover","links"].forEach(id=>$("#"+id).value="");
-  if(clearMsg) $("#msg").textContent="";
-}
-async function load(){
-  try{
-    const s=await getDocs(collection(db,"clients"));
-    $("#list").innerHTML=s.docs.map(d=>{
-      const c=d.data();
-      return `<div class="item"><div><b>${c.name||d.id}</b><br><span class="small">/${d.id} · ${(c.photos||[]).length} photos</span></div>
-      <div><button class="btn secondary edit" data-id="${d.id}">EDIT</button> <button class="btn secondary del" data-id="${d.id}">DELETE</button></div></div>`;
-    }).join("") || '<span class="small">No galleries yet.</span>';
-  }catch(e){
-    console.error(e); $("#list").innerHTML='<span class="error">Cannot read Firestore. Check Firestore Rules.</span>';
-  }
-}
-$("#list").onclick=async e=>{
-  const id=e.target.dataset.id;if(!id)return;
-  if(e.target.classList.contains("del")){
-    if(confirm("Delete this gallery?")){try{await deleteDoc(doc(db,"clients",id));load()}catch(err){alert("Delete failed. Check Firestore Rules.")}}
-    return;
-  }
-  if(e.target.classList.contains("edit")){
-    const s=await getDocs(collection(db,"clients"));const d=s.docs.find(x=>x.id===id);if(!d)return;
-    const c=d.data();
-    $("#slug").value=id;$("#name").value=c.name||"";$("#event").value=c.event||"";$("#date").value=c.date||"";
-    $("#code").value=c.accessCode||"";$("#cover").value=c.cover||"";$("#links").value=(c.photos||[]).map(p=>p.url||p).join("\n");
-    window.scrollTo({top:0,behavior:"smooth"});
-  }
-};
+import{db,collection,getDocs,doc,setDoc,deleteDoc}from"./admin-firebase.js";
+const $=s=>document.querySelector(s),USER="Audrynel",PASS="carly62652177";let data=[];
+function enter(){if($("#u").value.trim()===USER&&$("#p").value===PASS){sessionStorage.setItem("an_admin","1");$("#login").classList.add("hidden");$("#app").classList.remove("hidden");load()}else $("#e").textContent="Username or admin code is incorrect."}
+$("#in").onclick=enter;$("#p").onkeydown=e=>e.key==="Enter"&&enter();$("#out").onclick=()=>{sessionStorage.removeItem("an_admin");location.reload()};if(sessionStorage.getItem("an_admin")==="1"){login.classList.add("hidden");app.classList.remove("hidden");load()}
+function preview(){let links=$("#links").value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean),c=$("#cover").value.trim()||links[0]||"/cover.jpg";$("#pvc").src=c;$("#pvn").textContent=$("#name").value||"Client name";$("#pvm").textContent=($("#event").value||"Event")+" · "+($("#date").value||"Date");$("#pvp").textContent=$("#code").value?"Private gallery · access code enabled":"";$("#pvpics").innerHTML=links.slice(0,10).map(x=>`<img src="${x}" loading="lazy">`).join("");$("#pv").classList.remove("hidden")}
+["name","event","date","code","cover","links"].forEach(x=>$("#"+x).oninput=preview);
+$("#clear").onclick=()=>{["slug","name","event","date","code","cover","links"].forEach(x=>$("#"+x).value="");$("#pv").classList.add("hidden");$("#ft").textContent="Create gallery"};
+$("#save").onclick=async()=>{let slug=$("#slug").value.trim().toLowerCase().replace(/[^a-z0-9-]+/g,"-").replace(/^-|-$/g,""),links=$("#links").value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).map((url,i)=>({url,name:"photo-"+(i+1)+".jpg"}));if(!slug||!$("#name").value.trim()||!$("#code").value.trim())return $("#msg").textContent="Slug, name and access code are required.";try{await setDoc(doc(db,"clients",slug),{slug,name:$("#name").value.trim(),event:$("#event").value.trim(),date:$("#date").value.trim(),accessCode:$("#code").value.trim(),cover:$("#cover").value.trim()||links[0]?.url||"",photos:links,updatedAt:new Date().toISOString()},{merge:true});$("#msg").textContent="Gallery saved successfully: /"+slug;$("#msg").className="ok";await load()}catch(e){console.error(e);$("#msg").textContent="Save failed — check Firestore Rules."}};
+async function load(){try{let s=await getDocs(collection(db,"clients"));data=s.docs.map(d=>({id:d.id,...d.data()}));$("#s1").textContent=data.length;$("#s2").textContent=data.reduce((n,c)=>n+(c.photos?.length||0),0);$("#s3").textContent=data.filter(c=>c.cover).length;let u=data.map(c=>c.updatedAt).filter(Boolean).sort().pop();$("#s4").textContent=u?new Date(u).toLocaleDateString():"—";render(data)}catch(e){$("#list").innerHTML='<p class="err">Firestore read failed. Check your rules.</p>'}}
+function render(a){$("#list").innerHTML=a.map(c=>`<div class="row"><img src="${c.cover||c.photos?.[0]?.url||"/cover.jpg"}"><div><h3>${c.name||c.id}</h3><p>/${c.slug||c.id} · ${(c.photos||[]).length} photos · ${c.event||""}</p></div><div class="acts"><button class="btn secondary tiny ed" data-id="${c.id}">EDIT</button> <button class="btn secondary tiny de" data-id="${c.id}">DELETE</button></div></div>`).join("")||'<p class="muted">No galleries yet.</p>'}
+$("#q").oninput=e=>{let q=e.target.value.toLowerCase();render(data.filter(c=>(c.name+" "+c.event+" "+c.slug).toLowerCase().includes(q)))};
+$("#list").onclick=async e=>{let id=e.target.dataset.id;if(!id)return;if(e.target.classList.contains("de")){if(confirm("Delete this gallery?")){await deleteDoc(doc(db,"clients",id));load()}}else{let c=data.find(x=>x.id===id);$("#slug").value=c.slug||id;$("#name").value=c.name||"";$("#event").value=c.event||"";$("#date").value=c.date||"";$("#code").value=c.accessCode||"";$("#cover").value=c.cover||"";$("#links").value=(c.photos||[]).map(x=>x.url||x).join("\n");$("#ft").textContent="Edit gallery · "+c.name;preview();scrollTo({top:0,behavior:"smooth"})}};
 </script></body></html>

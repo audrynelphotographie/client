@@ -33,14 +33,14 @@
 
   <section id="galleryView" class="gallery-view hidden">
     <button id="backBtn" class="back">← All galleries</button>
-    <div class="gallery-head">
+    <div class="gallery-cover-wrap"><img id="galleryCover" class="gallery-cover" src="/cover.jpg" alt="Gallery cover"></div><div class="gallery-head">
       <div>
         <div class="eyebrow">PRIVATE GALLERY</div>
         <h2 id="galleryName">Gallery</h2>
-        <p id="galleryMeta"></p>
+        <p id="galleryMeta"></p><span id="galleryPasswordBadge" class="password-badge">Private gallery</span>
       </div>
       <div class="actions">
-        <button id="shareBtn" class="btn secondary">Share</button>
+        <button id="shareBtn" class="btn secondary">Share</button><button id="logoutBtn" class="btn secondary">Logout</button>
         <button id="downloadSelectedBtn" class="btn secondary">Download Selected</button>
         <button id="downloadAllBtn" class="btn gold">Download All</button>
       </div>

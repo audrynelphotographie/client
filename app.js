@@ -71,10 +71,16 @@ async function checkCode(){
   }else codeError.textContent="Incorrect access code.";
 }
 function showGallery(c){
-  current=c; homeView.classList.add("hidden");galleryView.classList.remove("hidden");
-  $("#galleryName").textContent=c.name||"Gallery";$("#galleryMeta").textContent=`${c.event||"Private"} · ${c.date||""}`;
+  current=c; homeView.classList.add("hidden"); galleryView.classList.remove("hidden");
+  $("#galleryCover").src=c.cover||c.photos?.[0]?.url||"/cover.jpg";
+  $("#galleryName").textContent=c.name||"Gallery";
+  $("#galleryMeta").textContent=`${c.event||"Private event"} · ${c.date||""}`;
+  $("#galleryPasswordBadge").textContent="Access verified · private gallery";
   photos=Array.isArray(c.photos)?c.photos:[];
-  $("#photoGrid").innerHTML=photos.map((p,i)=>`<div class="photo" data-i="${i}">
+  $("#photoGrid").innerHTML=photos.map((p,i)=>`<div class="photo" data-i="${i}"><label><input type="checkbox" data-index="${i}"></label><img src="${p.url||p}" alt="${p.name||"Photo "+(i+1)}" loading="lazy" decoding="async"></div>`).join("");
+  updateSelected();
+}
+$("#photoGrid").innerHTML=photos.map((p,i)=>`<div class="photo" data-i="${i}">
     <label><input type="checkbox" data-index="${i}"></label>
     <img src="${p.url||p}" alt="${p.name||"Photo "+(i+1)}" loading="lazy" decoding="async">
   </div>`).join("");
@@ -115,4 +121,9 @@ async function shareClient(c){
   }
 }
 $("#shareBtn").onclick=()=>current&&shareClient(current);
+$("#logoutBtn").onclick=()=>{
+  if(current) localStorage.removeItem(key(current.slug||current.id));
+  current=null; galleryView.classList.add("hidden"); homeView.classList.remove("hidden");
+  history.replaceState({}, "", "/"); showToast("Gallery access removed.");
+};
 loadClients();
