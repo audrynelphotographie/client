@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Private client galleries — Audry Nel Photography">
+  <title>Client Galleries | Audry Nel Photography</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body data-github-pages-clean-route="true">
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Audry Nel Photography home">
+      <span class="brand-name">AUDRY NEL</span>
+      <span class="brand-sub">PHOTOGRAPHY</span>
+    </a>
+
+    <nav class="main-nav">
+      <a href="#galleries">GALLERIES</a>
+      <span class="nav-divider"></span>
+      <a class="admin-link" href="/admin.html">⚙ ADMIN PORTAL</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow">AUDRY NEL PHOTOGRAPHY</p>
+      <h1>Client Galleries</h1>
+      <p>Your memories, beautifully captured with timeless elegance and precision.</p>
+      <div class="search-wrap">
+        <span>⌕</span>
+        <input id="clientSearch" type="search" placeholder="Search client or event name..." autocomplete="off">
+      </div>
+    </section>
+
+    <section id="galleries" class="gallery-section">
+      <div id="clientGrid" class="client-grid"></div>
+      <div id="emptyState" class="empty-state hidden">
+        <h2>No gallery found</h2>
+        <p>Try another client or event name.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">© 2026 AUDRY NEL PHOTOGRAPHY · Gitega, Burundi</footer>
+
+  <div id="galleryModal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal></div>
+    <section class="client-modal" role="dialog" aria-modal="true" aria-labelledby="modalClientName">
+      <button class="modal-close" data-close-modal aria-label="Close">×</button>
+      <div id="modalCover" class="modal-cover"></div>
+      <div class="modal-body">
+        <p class="eyebrow">PRIVATE GALLERY</p>
+        <h2 id="modalClientName"></h2>
+        <p id="modalClientEvent" class="muted"></p>
+        <form id="accessForm">
+          <label for="accessCode">Enter your access code</label>
+          <div class="code-row">
+            <input id="accessCode" type="password" inputmode="text" autocomplete="off" placeholder="Access code" required>
+            <button class="gold-btn" type="submit">ENTER</button>
+          </div>
+          <p id="accessError" class="error"></p>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <script src="/contentclient.js"></script>
+  <script type="module" src="/script.js"></script>
+</body>
+</html>
