@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>__TITLE__</title>
+  <meta name="description" content="__DESC__">
+  <meta property="og:title" content="__TITLE__">
+  <meta property="og:description" content="__DESC__">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="__IMAGE__">
+  <meta property="og:url" content="__URL__">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="__TITLE__">
+  <meta name="twitter:description" content="__DESC__">
+  <meta name="twitter:image" content="__IMAGE__">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="icon" href="/favicon.svg">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="/">
+    <span>AUDRY NEL</span><small>PHOTOGRAPHY</small>
+  </a>
+  <a class="admin-link" href="/admin.html">⚙ ADMIN PORTAL</a>
+</header>
+
+<main id="app">
+  <section id="homeView" class="home">
+    <div class="eyebrow">AUDRY NEL PHOTOGRAPHY</div>
+    <h1>Client Galleries</h1>
+    <p class="lead">Your memories, beautifully captured with timeless elegance and precision.</p>
+    <div class="search-wrap"><span>⌕</span><input id="search" placeholder="Search client or event name..." autocomplete="off"></div>
+    <div id="clientGrid" class="client-grid"></div>
+    <p id="homeStatus" class="status"></p>
+  </section>
+
+  <section id="galleryView" class="gallery-view hidden">
+    <button id="backBtn" class="back">← All galleries</button>
+    <div class="gallery-head">
+      <div>
+        <div class="eyebrow">PRIVATE GALLERY</div>
+        <h2 id="galleryName">Gallery</h2>
+        <p id="galleryMeta"></p><span id="galleryPasswordBadge" class="password-badge">Private gallery</span>
+      </div>
+      <div class="actions">
+        <button id="shareBtn" class="btn secondary">Share</button><button id="logoutBtn" class="btn secondary">Logout</button>
+        <button id="downloadSelectedBtn" class="btn secondary">Download Selected</button>
+        <button id="downloadAllBtn" class="btn gold">Download All</button>
+      </div>
+    </div>
+    <div class="selectbar">
+      <label><input id="selectAll" type="checkbox"> Select all</label>
+      <span id="selectedCount">0 selected</span>
+    </div>
+    <div id="photoGrid" class="photo-grid"></div>
+    <p id="galleryStatus" class="status"></p>
+  </section>
+</main>
+
+<div id="codeModal" class="modal hidden">
+  <div class="modal-card">
+    <button id="closeModal" class="modal-close">×</button>
+    <img id="modalCover" class="modal-cover" alt="" style="display:none">
+    <div class="eyebrow">PRIVATE GALLERY</div>
+    <h2 id="modalName">Access your gallery</h2>
+    <p>Enter your access code once. This device will remember your access.</p>
+    <input id="accessCode" type="password" inputmode="text" placeholder="Access code" autocomplete="off">
+    <button id="enterCode" class="btn gold wide">ENTER</button>
+    <p id="codeError" class="error"></p>
+  </div>
+</div>
+
+<div id="lightbox" class="lightbox hidden">
+  <button id="lightboxClose" class="lightbox-close">×</button>
+  <img id="lightboxImg" alt="Photo preview">
+  <div class="lightbox-actions"><button id="lightboxDownload" class="btn gold">Download</button></div>
+</div>
+
+<div id="toast" class="toast"></div>
+<footer>© 2026 AUDRY NEL PHOTOGRAPHY · Gitega, Burundi</footer>
+
+<script type="module" src="/app.js"></script>
+</body>
+</html>

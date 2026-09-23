@@ -1,0 +1,11 @@
+{
+  "name": "audrynel-gallery-functions",
+  "description": "Serves per-gallery meta tags (title, description, cover image) for link previews.",
+  "engines": { "node": "20" },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^12.1.0",
+    "firebase-functions": "^5.0.0"
+  },
+  "private": true
+}
