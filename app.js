@@ -1,4 +1,4 @@
-import {db,collection,getDocs,getDoc,doc} from "./firebase.js";
+import {db,collection,getDocs,getDoc,doc,updateDoc,increment} from "./firebase.js";
 
 const $=s=>document.querySelector(s);
 const homeView=$("#homeView"), galleryView=$("#galleryView"), grid=$("#clientGrid");
@@ -55,7 +55,13 @@ async function openBySlug(s,silent=false){
 }
 function openClient(c){
   current=c; $("#modalName").textContent=c.name||"Access your gallery"; codeInput.value="";codeError.textContent="";
+  const cover=c.cover||c.photos?.[0]?.url||"/cover.jpg";
+  const mc=$("#modalCover"); if(mc){mc.src=cover; mc.onerror=()=>mc.style.display="none"; mc.style.display="block";}
   modal.classList.remove("hidden"); setTimeout(()=>codeInput.focus(),80);
+}
+async function logView(c){
+  try{ await updateDoc(doc(db,"clients",c.slug||c.id),{views:increment(1),lastViewedAt:new Date().toISOString()}); }
+  catch(e){ console.error("view log failed",e); }
 }
 $("#closeModal").onclick=()=>modal.classList.add("hidden");
 $("#enterCode").onclick=checkCode;
@@ -79,12 +85,7 @@ function showGallery(c){
   photos=Array.isArray(c.photos)?c.photos:[];
   $("#photoGrid").innerHTML=photos.map((p,i)=>`<div class="photo" data-i="${i}"><label><input type="checkbox" data-index="${i}"></label><img src="${p.url||p}" alt="${p.name||"Photo "+(i+1)}" loading="lazy" decoding="async"></div>`).join("");
   updateSelected();
-}
-$("#photoGrid").innerHTML=photos.map((p,i)=>`<div class="photo" data-i="${i}">
-    <label><input type="checkbox" data-index="${i}"></label>
-    <img src="${p.url||p}" alt="${p.name||"Photo "+(i+1)}" loading="lazy" decoding="async">
-  </div>`).join("");
-  updateSelected();
+  logView(c);
 }
 function updateSelected(){
   const n=[...document.querySelectorAll("#photoGrid input:checked")].length;
