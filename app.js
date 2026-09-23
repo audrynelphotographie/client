@@ -10,6 +10,24 @@ function key(s){return "audrynel_access_"+s;}
 function showToast(t){const x=$("#toast");x.textContent=t;x.style.display="block";setTimeout(()=>x.style.display="none",2500)}
 function cleanText(v){return v??""}
 
+// FEATURED WORK strip on the homepage — paste your real photo links here (ImgBB, audrynel.com, etc).
+// Leave "url" empty to show a placeholder card until you have a link ready.
+const PROMO_PHOTOS = [
+  {url:"https://i.ibb.co/GvhTHnZB/anniv4.jpg", caption:"Wedding"},
+  {url:"https://i.ibb.co/rGmwHVNW/8.jpg", caption:"Portrait"},
+  {url:"https://i.ibb.co/8DBqmhTP/23.jpg", caption:"Editorial"},
+  {url:"https://i.ibb.co/0jKMyJkn/32.jpg", caption:"Photoshoot"},
+  {url:"https://i.ibb.co/SXNX77H6/17.jpg", caption:"Fashion"},
+];
+function renderPromo(){
+  const track=$("#promoTrack"); if(!track)return;
+  track.innerHTML=PROMO_PHOTOS.map(p=>p.url
+    ? `<div class="promo-item"><img src="${p.url}" alt="Audry Nel Photography — ${p.caption}" loading="lazy"></div>`
+    : `<div class="promo-item placeholder"><span>${p.caption}</span></div>`
+  ).join("");
+}
+renderPromo();
+
 async function loadClients(){
   grid.innerHTML="";
   try{

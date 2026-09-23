@@ -3,12 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Client Galleries | Audry Nel Photography</title>
-  <meta name="description" content="Private client galleries by Audry Nel Photography.">
-  <meta property="og:title" content="Client Gallery | Audry Nel Photography">
-  <meta property="og:description" content="Private photo gallery">
+  <title>__TITLE__</title>
+  <meta name="description" content="__DESC__">
+  <meta property="og:title" content="__TITLE__">
+  <meta property="og:description" content="__DESC__">
   <meta property="og:type" content="website">
-  <meta property="og:image" content="/cover.jpg">
+  <meta property="og:image" content="__IMAGE__">
+  <meta property="og:url" content="__URL__">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="__TITLE__">
+  <meta name="twitter:description" content="__DESC__">
+  <meta name="twitter:image" content="__IMAGE__">
   <meta name="theme-color" content="#0a0a0a">
   <link rel="icon" href="/favicon.svg">
   <link rel="stylesheet" href="/styles.css">
@@ -29,6 +34,14 @@
     <div class="search-wrap"><span>⌕</span><input id="search" placeholder="Search client or event name..." autocomplete="off"></div>
     <div id="clientGrid" class="client-grid"></div>
     <p id="homeStatus" class="status"></p>
+
+    <div class="promo-strip">
+      <div class="promo-head">
+        <div class="eyebrow">FEATURED WORK</div>
+        <a class="promo-cta" href="https://audrynel.com" target="_blank" rel="noopener">View full portfolio →</a>
+      </div>
+      <div id="promoTrack" class="promo-track"></div>
+    </div>
   </section>
 
   <section id="galleryView" class="gallery-view hidden">
