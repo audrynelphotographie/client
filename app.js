@@ -3,7 +3,7 @@ import {db,collection,getDocs,getDoc,doc,updateDoc,increment} from "./firebase.j
 const $=s=>document.querySelector(s);
 const homeView=$("#homeView"), galleryView=$("#galleryView"), grid=$("#clientGrid");
 const modal=$("#codeModal"), codeInput=$("#accessCode"), codeError=$("#codeError");
-let clients=[], current=null, photos=[];
+let clients=[], current=null, photos=[], lightboxIndex=-1;
 
 function slug(){return decodeURIComponent(location.pathname.replace(/^\/+|\/+$/g,"").split("/")[0]||"");}
 function key(s){return "audrynel_access_"+s;}
@@ -78,7 +78,6 @@ async function checkCode(){
 }
 function showGallery(c){
   current=c; homeView.classList.add("hidden"); galleryView.classList.remove("hidden");
-  $("#galleryCover").src=c.cover||c.photos?.[0]?.url||"/cover.jpg";
   $("#galleryName").textContent=c.name||"Gallery";
   $("#galleryMeta").textContent=`${c.event||"Private event"} · ${c.date||""}`;
   $("#galleryPasswordBadge").textContent="Access verified · private gallery";
@@ -93,6 +92,24 @@ function updateSelected(){
   document.querySelectorAll(".photo").forEach(x=>x.classList.toggle("selected",x.querySelector("input").checked));
 }
 $("#photoGrid").addEventListener("change",updateSelected);
+$("#photoGrid").addEventListener("click",e=>{
+  const img=e.target.closest("img"); if(!img)return;
+  const wrap=e.target.closest(".photo"); if(!wrap)return;
+  openLightbox(+wrap.dataset.i);
+});
+function openLightbox(i){
+  const p=photos[i]; if(!p)return;
+  lightboxIndex=i;
+  $("#lightboxImg").src=p.url||p;
+  $("#lightbox").classList.remove("hidden");
+}
+function closeLightbox(){$("#lightbox").classList.add("hidden")}
+$("#lightboxClose").onclick=closeLightbox;
+$("#lightbox").addEventListener("click",e=>{if(e.target.id==="lightbox")closeLightbox()});
+$("#lightboxDownload").onclick=()=>{
+  const p=photos[lightboxIndex]; if(!p)return;
+  downloadOne(p.url||p,p.name||`photo-${lightboxIndex+1}.jpg`);
+};
 $("#selectAll").onchange=e=>{document.querySelectorAll("#photoGrid input").forEach(x=>x.checked=e.target.checked);updateSelected()};
 $("#backBtn").onclick=()=>{galleryView.classList.add("hidden");homeView.classList.remove("hidden");history.replaceState({}, "", "/");};
 async function downloadOne(url,name){

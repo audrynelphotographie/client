@@ -37,10 +37,10 @@
       <div>
         <div class="eyebrow">PRIVATE GALLERY</div>
         <h2 id="galleryName">Gallery</h2>
-        <p id="galleryMeta"></p>
+        <p id="galleryMeta"></p><span id="galleryPasswordBadge" class="password-badge">Private gallery</span>
       </div>
       <div class="actions">
-        <button id="shareBtn" class="btn secondary">Share</button>
+        <button id="shareBtn" class="btn secondary">Share</button><button id="logoutBtn" class="btn secondary">Logout</button>
         <button id="downloadSelectedBtn" class="btn secondary">Download Selected</button>
         <button id="downloadAllBtn" class="btn gold">Download All</button>
       </div>
@@ -65,6 +65,12 @@
     <button id="enterCode" class="btn gold wide">ENTER</button>
     <p id="codeError" class="error"></p>
   </div>
+</div>
+
+<div id="lightbox" class="lightbox hidden">
+  <button id="lightboxClose" class="lightbox-close">×</button>
+  <img id="lightboxImg" alt="Photo preview">
+  <div class="lightbox-actions"><button id="lightboxDownload" class="btn gold">Download</button></div>
 </div>
 
 <div id="toast" class="toast"></div>
