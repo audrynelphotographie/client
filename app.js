@@ -22,7 +22,7 @@ const PROMO_PHOTOS = [
 function renderPromo(){
   const track=$("#promoTrack"); if(!track)return;
   track.innerHTML=PROMO_PHOTOS.map(p=>p.url
-    ? `<div class="promo-item"><img src="${p.url}" alt="Audry Nel Photography — ${p.caption}" loading="lazy"></div>`
+    ? `<div class="promo-item"><img src="${p.url}" alt="Audry Nel Photography — ${p.caption}" loading="lazy" onload="this.classList.add('loaded')"></div>`
     : `<div class="promo-item placeholder"><span>${p.caption}</span></div>`
   ).join("");
 }
@@ -43,7 +43,7 @@ async function loadClients(){
 function renderClients(list){
   grid.innerHTML=list.map(c=>`
     <article class="client-card">
-      <img class="cover" src="${cleanText(c.cover)}" alt="${cleanText(c.name)}" loading="lazy" onerror="this.style.opacity='.2'">
+      <img class="cover" src="${cleanText(c.cover)}" alt="${cleanText(c.name)}" loading="lazy" onload="this.classList.add('loaded')" onerror="this.style.opacity='.2'">
       <div class="card-body">
         <h3>${cleanText(c.name)}</h3>
         <div class="meta">${cleanText(c.event||"Private gallery")} · ${cleanText(c.date||"")}</div>
@@ -100,7 +100,9 @@ function showGallery(c){
   $("#galleryMeta").textContent=`${c.event||"Private event"} · ${c.date||""}`;
   $("#galleryPasswordBadge").textContent="Access verified · private gallery";
   photos=Array.isArray(c.photos)?c.photos:[];
-  $("#photoGrid").innerHTML=photos.map((p,i)=>`<div class="photo" data-i="${i}"><label><input type="checkbox" data-index="${i}"></label><img src="${p.url||p}" alt="${p.name||"Photo "+(i+1)}" loading="lazy" decoding="async"></div>`).join("");
+  $("#photoGrid").innerHTML=photos.map((p,i)=>`<div class="photo" data-i="${i}"><label><input type="checkbox" data-index="${i}"></label><img src="${p.url||p}" alt="${p.name||"Photo "+(i+1)}" loading="lazy" decoding="async" onload="this.classList.add('loaded')"></div>`).join("");
+  const thanks=$("#galleryThanks");
+  if(thanks) thanks.textContent=`Thank you${c.name?", "+c.name:""} — it's an honor to have captured your story. We hope these memories bring you joy for years to come.`;
   updateSelected();
   logView(c);
 }
