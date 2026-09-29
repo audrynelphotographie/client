@@ -14,27 +14,16 @@ body{background:#080808}.wrap{max-width:1400px;margin:auto;padding:30px 4% 70px}
 @media(max-width:900px){.cols{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}}@media(max-width:600px){.wrap{padding:20px 14px}.nav h1{font-size:31px}.stats{gap:8px}.stat{padding:14px}.stat b{font-size:24px}.form{grid-template-columns:1fr}.full{grid-column:auto}.row{grid-template-columns:48px 1fr}.row img{width:48px;height:48px}.row .acts{grid-column:1/-1}}
 </style></head><body>
 <header class="topbar"><a class="brand" href="/">AUDRY NEL<small>PHOTOGRAPHY</small></a><a class="admin-link" href="/">GALLERIES</a></header>
-<div id="login" class="login"><div class="loginbox"><div class="eyebrow">SECURE ADMIN PORTAL</div><h1 style="font:600 38px 'Playfair Display',serif">Admin Dashboard</h1><p class="muted">Manage your client galleries professionally.</p><input id="u" type="email" placeholder="Admin email" autocomplete="username"><input id="p" type="password" placeholder="Password" autocomplete="current-password"><button id="in" class="btn gold wide">LOGIN</button><p id="e" class="err"></p></div></div>
+<div id="login" class="login"><div class="loginbox"><div class="eyebrow">SECURE ADMIN PORTAL</div><h1 style="font:600 38px 'Playfair Display',serif">Admin Dashboard</h1><p class="muted">Manage your client galleries professionally.</p><input id="u" placeholder="Username"><input id="p" type="password" placeholder="Admin code"><button id="in" class="btn gold wide">LOGIN</button><p id="e" class="err"></p></div></div>
 <main id="app" class="wrap hidden"><div class="nav"><div><div class="eyebrow">CONTROL CENTER</div><h1>Dashboard</h1><div class="muted">Client delivery management</div></div><button id="out" class="btn secondary">LOG OUT</button></div>
 <div class="stats"><div class="stat"><small>Galleries</small><b id="s1">0</b><span>clients</span></div><div class="stat"><small>Photos</small><b id="s2">0</b><span>delivered</span></div><div class="stat"><small>Covers</small><b id="s3">0</b><span>gallery covers</span></div><div class="stat"><small>Views</small><b id="s5">0</b><span>gallery opens</span></div><div class="stat"><small>Updated</small><b id="s4">—</b><span>latest</span></div></div>
 <div class="cols"><section class="panel"><h2 id="ft">Create gallery</h2><div class="form"><input id="slug" placeholder="Slug: wilson-audry"><input id="name" placeholder="Client name"><input id="event" placeholder="Event"><input id="date" placeholder="Date"><input id="code" placeholder="Client access code"><input id="cover" placeholder="Cover image URL"><textarea id="links" placeholder="ImgBB HD links — one per line"></textarea><button id="save" class="btn gold">SAVE GALLERY</button><button id="clear" class="btn secondary">CLEAR</button></div><p id="msg" class="muted"></p><div id="pv" class="preview hidden"><img id="pvc"><div class="preview-body"><h2 id="pvn"></h2><p id="pvm" class="muted"></p><small id="pvp" class="ok"></small><div id="pvpics" class="photos"></div></div></div></section>
 <section class="panel"><h2>Client list</h2><input id="q" class="search" placeholder="Search client / event"><div id="list" class="list" style="margin-top:12px"></div></section></div></main>
 <script type="module">
-import{db,collection,getDocs,doc,setDoc,deleteDoc,auth,signInWithEmailAndPassword,onAuthStateChanged,signOut}from"./admin-firebase.js";
-const $=s=>document.querySelector(s);let data=[];
-async function enter(){
-  $("#e").textContent="";
-  const email=$("#u").value.trim(),pass=$("#p").value;
-  if(!email||!pass){$("#e").textContent="Enter your email and password.";return}
-  try{ await signInWithEmailAndPassword(auth,email,pass); }
-  catch(err){ console.error(err); $("#e").textContent="Email or password is incorrect."; }
-}
-$("#in").onclick=enter;$("#p").onkeydown=e=>e.key==="Enter"&&enter();
-$("#out").onclick=()=>signOut(auth);
-onAuthStateChanged(auth,user=>{
-  if(user){ $("#login").classList.add("hidden"); $("#app").classList.remove("hidden"); load(); }
-  else { $("#app").classList.add("hidden"); $("#login").classList.remove("hidden"); $("#p").value=""; }
-});
+import{db,collection,getDocs,doc,setDoc,deleteDoc}from"./admin-firebase.js";
+const $=s=>document.querySelector(s),USER="Audrynel",PASS="carly62652177";let data=[];
+function enter(){if($("#u").value.trim()===USER&&$("#p").value===PASS){sessionStorage.setItem("an_admin","1");$("#login").classList.add("hidden");$("#app").classList.remove("hidden");load()}else $("#e").textContent="Username or admin code is incorrect."}
+$("#in").onclick=enter;$("#p").onkeydown=e=>e.key==="Enter"&&enter();$("#out").onclick=()=>{sessionStorage.removeItem("an_admin");location.reload()};if(sessionStorage.getItem("an_admin")==="1"){login.classList.add("hidden");app.classList.remove("hidden");load()}
 function preview(){let links=$("#links").value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean),c=$("#cover").value.trim()||links[0]||"/cover.jpg";$("#pvc").src=c;$("#pvn").textContent=$("#name").value||"Client name";$("#pvm").textContent=($("#event").value||"Event")+" · "+($("#date").value||"Date");$("#pvp").textContent=$("#code").value?"Private gallery · access code enabled":"";$("#pvpics").innerHTML=links.slice(0,10).map(x=>`<img src="${x}" loading="lazy">`).join("");$("#pv").classList.remove("hidden")}
 ["name","event","date","code","cover","links"].forEach(x=>$("#"+x).oninput=preview);
 $("#clear").onclick=()=>{["slug","name","event","date","code","cover","links"].forEach(x=>$("#"+x).value="");$("#pv").classList.add("hidden");$("#ft").textContent="Create gallery"};
