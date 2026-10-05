@@ -216,30 +216,108 @@ async function renderGalleryPage(clientId) {
 
   const grid = $("#photoGrid");
   let currentIndex = 0;
+  const photos = client.photos || [];
+  const selectedIndexes = new Set();
 
-  (client.photos || []).forEach((photo, index) => {
-    const card = document.createElement("article");
-    card.className = "client-card selectable-photo";
-    card.innerHTML = `
-      <div class="card-cover">
-        <img src="${escapeHTML(photo.hd || photo.standard || "")}" alt="Photo ${index + 1}" loading="${index < 25 ? "eager" : "lazy"}" decoding="async">
-        <label class="photo-select" title="Select photo">
-          <input type="checkbox" data-photo-index="${index}">
-          <span></span>
-        </label>
-        <button class="photo-open" type="button" aria-label="Open photo">VIEW</button>
-      </div>
-    `;
-    card.querySelector(".photo-open").addEventListener("click", () => openLightbox(index));
-    card.querySelector("img").addEventListener("click", () => openLightbox(index));
-    grid.appendChild(card);
-  });
+  /* ---- Instagram-style lazy loading: 10 photos per batch ---- */
+  const BATCH = 10;
+  const conn = navigator.connection || {};
+  const slow = !!conn.saveData || /(^|-)(2g|3g)$/.test(conn.effectiveType || "");
+  // Grid uses the lighter "standard" image (saves data on 3G); HD is used only for download.
+  const gridSrc = (p) => p.standard || p.hd || "";
+  let rendered = 0;
+
+  const sentinel = document.createElement("div");
+  sentinel.className = "photo-sentinel";
+  grid.after(sentinel);
+
+  const io = "IntersectionObserver" in window
+    ? new IntersectionObserver((entries) => {
+        if (entries.some(e => e.isIntersecting)) loadMore();
+      }, { rootMargin: slow ? "300px 0px" : "900px 0px" })
+    : null;
+
+  function finishIfDone() {
+    if (rendered >= photos.length) {
+      io?.disconnect();
+      sentinel.remove();
+      return true;
+    }
+    return false;
+  }
+
+  function renderBatch() {
+    const end = Math.min(rendered + BATCH, photos.length);
+    const frag = document.createDocumentFragment();
+    let pending = end - rendered;
+
+    const settle = () => {
+      pending--;
+      // Next batch is only requested once this one has finished downloading.
+      if (pending <= 0 && !finishIfDone() && io) {
+        io.unobserve(sentinel);
+        io.observe(sentinel);
+      }
+    };
+
+    for (let index = rendered; index < end; index++) {
+      const src = gridSrc(photos[index]);
+      const card = document.createElement("article");
+      card.className = "client-card selectable-photo" + (selectedIndexes.has(index) ? " selected" : "");
+      card.innerHTML = `
+        <div class="card-cover">
+          <img class="lazy-img" alt="Photo ${index + 1}" decoding="async">
+          <label class="photo-select" title="Select photo">
+            <input type="checkbox" data-photo-index="${index}" ${selectedIndexes.has(index) ? "checked" : ""}>
+            <span></span>
+          </label>
+          <button class="photo-open" type="button" aria-label="Open photo">VIEW</button>
+        </div>
+      `;
+      const img = card.querySelector("img");
+      let tries = 0, done = false;
+      const end1 = () => { if (!done) { done = true; settle(); } };
+      img.addEventListener("load", () => { img.classList.add("loaded"); end1(); });
+      img.addEventListener("error", () => {
+        // Weak network: retry up to 2 times before giving up.
+        if (tries++ < 2) {
+          setTimeout(() => { img.removeAttribute("src"); img.src = src; }, 1500 * tries);
+        } else end1();
+      });
+      img.src = src;
+      card.querySelector(".photo-open").addEventListener("click", () => openLightbox(index));
+      img.addEventListener("click", () => openLightbox(index));
+      frag.appendChild(card);
+    }
+    rendered = end;
+    grid.appendChild(frag);
+  }
+
+  function loadMore() {
+    if (finishIfDone()) return;
+    io?.unobserve(sentinel); // wait until current batch settles
+    renderBatch();
+  }
+
+  if (io) {
+    loadMore();
+  } else {
+    // Very old browsers: render everything.
+    while (rendered < photos.length) renderBatch();
+  }
 
   function openLightbox(index) {
     if (!client.photos?.length) return;
     currentIndex = (index + client.photos.length) % client.photos.length;
     const photo = client.photos[currentIndex];
-    $("#lightboxImage").src = photo.hd || photo.standard;
+    const lb = $("#lightboxImage");
+    const shownIndex = currentIndex;
+    lb.src = photo.standard || photo.hd;
+    if (!slow && photo.hd && photo.standard && photo.hd !== photo.standard) {
+      const hi = new Image();
+      hi.onload = () => { if (currentIndex === shownIndex) lb.src = photo.hd; };
+      hi.src = photo.hd;
+    }
     $("#lightboxImage").alt = `${client.name} photo ${currentIndex + 1}`;
     $("#photoCounter").textContent = `${currentIndex + 1} / ${client.photos.length}`;
     $("#lightbox").classList.remove("hidden");
@@ -260,8 +338,6 @@ async function renderGalleryPage(clientId) {
     downloadOne(url, photoFileName(client.name, currentIndex, "HD"));
   };
 
-  const selectedIndexes = new Set();
-
   function updateSelectedUI() {
     $("#selectedCount").textContent = selectedIndexes.size;
   }
@@ -277,14 +353,13 @@ async function renderGalleryPage(clientId) {
   });
 
   $("#selectAllPhotos").onclick = () => {
-    const boxes = grid.querySelectorAll("[data-photo-index]");
-    const allSelected = selectedIndexes.size === client.photos.length;
-    boxes.forEach(box => {
-      box.checked = !allSelected;
-      const index = Number(box.dataset.photoIndex);
-      if (box.checked) selectedIndexes.add(index);
-      else selectedIndexes.delete(index);
-      box.closest(".selectable-photo")?.classList.toggle("selected", box.checked);
+    const allSelected = selectedIndexes.size === photos.length;
+    selectedIndexes.clear();
+    if (!allSelected) photos.forEach((_, i) => selectedIndexes.add(i));
+    grid.querySelectorAll("[data-photo-index]").forEach(box => {
+      const on = selectedIndexes.has(Number(box.dataset.photoIndex));
+      box.checked = on;
+      box.closest(".selectable-photo")?.classList.toggle("selected", on);
     });
     updateSelectedUI();
   };

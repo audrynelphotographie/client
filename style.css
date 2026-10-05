@@ -109,3 +109,10 @@ button,input{font:inherit}
   .photo-select{top:4px;left:4px}
   .photo-select span{width:19px;height:19px;border-radius:5px}
 }
+
+/* Instagram-style lazy loading */
+.client-card .card-cover img.lazy-img{opacity:0;transition:opacity .45s ease,transform .35s ease}
+.client-card .card-cover img.lazy-img.loaded{opacity:1}
+.photo-sentinel{height:70px;display:grid;place-items:center}
+.photo-sentinel::after{content:"";width:22px;height:22px;border:2px solid #303039;border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
