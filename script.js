@@ -263,10 +263,12 @@ async function renderGalleryPage(clientId) {
     for (let index = rendered; index < end; index++) {
       const src = gridSrc(photos[index]);
       const card = document.createElement("article");
-      card.className = "client-card selectable-photo" + (selectedIndexes.has(index) ? " selected" : "");
+      card.className = "client-card selectable-photo is-loading" + (selectedIndexes.has(index) ? " selected" : "");
       card.innerHTML = `
         <div class="card-cover">
           <img class="lazy-img" alt="Photo ${index + 1}" decoding="async">
+          <span class="photo-loader" aria-hidden="true"></span>
+          <button class="photo-retry" type="button">⟳ RETRY</button>
           <label class="photo-select" title="Select photo">
             <input type="checkbox" data-photo-index="${index}" ${selectedIndexes.has(index) ? "checked" : ""}>
             <span></span>
@@ -277,12 +279,28 @@ async function renderGalleryPage(clientId) {
       const img = card.querySelector("img");
       let tries = 0, done = false;
       const end1 = () => { if (!done) { done = true; settle(); } };
-      img.addEventListener("load", () => { img.classList.add("loaded"); end1(); });
+      img.addEventListener("load", () => {
+        img.classList.add("loaded");
+        card.classList.remove("is-loading", "is-error");
+        end1();
+      });
       img.addEventListener("error", () => {
-        // Weak network: retry up to 2 times before giving up.
+        // Weak network: retry up to 2 times before showing the RETRY button.
         if (tries++ < 2) {
           setTimeout(() => { img.removeAttribute("src"); img.src = src; }, 1500 * tries);
-        } else end1();
+        } else {
+          card.classList.remove("is-loading");
+          card.classList.add("is-error");
+          end1();
+        }
+      });
+      card.querySelector(".photo-retry").addEventListener("click", (e) => {
+        e.stopPropagation();
+        tries = 0;
+        card.classList.remove("is-error");
+        card.classList.add("is-loading");
+        img.removeAttribute("src");
+        img.src = src;
       });
       img.src = src;
       card.querySelector(".photo-open").addEventListener("click", () => openLightbox(index));

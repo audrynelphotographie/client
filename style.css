@@ -116,3 +116,20 @@ button,input{font:inherit}
 .photo-sentinel{height:70px;display:grid;place-items:center}
 .photo-sentinel::after{content:"";width:22px;height:22px;border:2px solid #303039;border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* Per-photo loading indicator */
+.selectable-photo .card-cover{background:#0d0d10}
+.selectable-photo.is-loading .card-cover{
+  background:linear-gradient(110deg,#0d0d10 30%,#1c1b21 50%,#0d0d10 70%);
+  background-size:200% 100%;animation:shimmer 1.3s linear infinite}
+@keyframes shimmer{to{background-position:-200% 0}}
+.photo-loader{display:none;position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;
+  border:3px solid rgba(197,160,68,.25);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;z-index:3;pointer-events:none}
+.selectable-photo.is-loading .photo-loader{display:block}
+.photo-retry{display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:5;
+  border:1px solid var(--gold);background:rgba(0,0,0,.8);color:var(--gold-light);border-radius:8px;padding:9px 12px;font-size:11px;font-weight:700;cursor:pointer}
+.selectable-photo.is-error .photo-retry{display:block}
+@media(max-width:650px){
+  .photo-loader{width:18px;height:18px;margin:-9px 0 0 -9px;border-width:2px}
+  .photo-retry{padding:5px 6px;font-size:8px}
+}
