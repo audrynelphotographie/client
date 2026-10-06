@@ -133,3 +133,20 @@ button,input{font:inherit}
   .photo-loader{width:18px;height:18px;margin:-9px 0 0 -9px;border-width:2px}
   .photo-retry{padding:5px 6px;font-size:8px}
 }
+
+/* Gallery loading screen + progress strip */
+.gallery-loader{position:fixed;inset:0;z-index:300;background:var(--bg);display:grid;place-items:center;text-align:center;padding:24px;transition:opacity .5s ease,visibility .5s}
+.gallery-loader.gl-hide{opacity:0;visibility:hidden}
+.gl-brand{font-family:"Playfair Display",Georgia,serif;font-size:28px;letter-spacing:5px}
+.gl-sub{color:var(--gold);font-size:10px;letter-spacing:5px;margin:8px 0 34px}
+.gl-ring{width:54px;height:54px;margin:0 auto 24px;border:3px solid rgba(197,160,68,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .9s linear infinite}
+.gl-text{color:var(--white);font-size:14px;letter-spacing:.5px;margin-bottom:14px}
+.gl-bar{width:min(260px,70vw);height:3px;background:#1f1f24;border-radius:3px;overflow:hidden;margin:0 auto}
+.gl-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-light));transition:width .35s ease}
+.gl-bar.indeterminate i{width:40%;animation:glslide 1.2s ease-in-out infinite}
+@keyframes glslide{0%{margin-left:-40%}100%{margin-left:100%}}
+.gl-hint{color:var(--muted);font-size:12px;margin-top:18px}
+.load-progress{margin:-6px 0 18px;padding:0 4px}
+.load-progress span{display:block;color:var(--muted);font-size:11px;letter-spacing:.5px;margin-bottom:7px}
+.lp-bar{height:3px;background:#1f1f24;border-radius:3px;overflow:hidden}
+.lp-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--gold-light));transition:width .35s ease}

@@ -26,6 +26,36 @@ function escapeHTML(value = "") {
   }[c]));
 }
 
+function loaderMarkup(text = "Preparing your gallery…") {
+  return `
+    <div id="galleryLoader" class="gallery-loader" role="status" aria-live="polite">
+      <div class="gl-inner">
+        <p class="gl-brand">AUDRY NEL</p>
+        <p class="gl-sub">PHOTOGRAPHY</p>
+        <div class="gl-ring"></div>
+        <p class="gl-text" id="galleryLoaderText">${text}</p>
+        <div class="gl-bar indeterminate"><i id="galleryLoaderBar"></i></div>
+        <p class="gl-hint">Please wait — your photos are being prepared.</p>
+      </div>
+    </div>`;
+}
+
+function setLoader(text, pct) {
+  const t = $("#galleryLoaderText"), b = $("#galleryLoaderBar");
+  if (t && text) t.textContent = text;
+  if (b && typeof pct === "number") {
+    b.parentElement.classList.remove("indeterminate");
+    b.style.width = Math.max(4, Math.min(100, pct)) + "%";
+  }
+}
+
+function hideLoader() {
+  const el = $("#galleryLoader");
+  if (!el) return;
+  el.classList.add("gl-hide");
+  setTimeout(() => el.remove(), 600);
+}
+
 async function renderClients(filter = "") {
   const grid = $("#clientGrid");
   const empty = $("#emptyState");
@@ -160,6 +190,7 @@ async function renderGalleryPage(clientId) {
   }
 
   document.body.innerHTML = `
+    ${loaderMarkup("Loading your photos…")}
     <header class="site-header">
       <a class="brand" href="/">
         <span class="brand-name">AUDRY NEL</span>
@@ -190,6 +221,10 @@ async function renderGalleryPage(clientId) {
             <button class="gold-btn" id="downloadSelected">DOWNLOAD SELECTED</button>
             <button class="gold-btn" id="downloadAll">DOWNLOAD ALL</button>
           </div>
+        </div>
+        <div class="load-progress" id="loadProgress">
+          <span id="loadProgressText"></span>
+          <div class="lp-bar"><i id="loadProgressBar"></i></div>
         </div>
         <div class="client-grid" id="photoGrid"></div>
       </section>
@@ -226,6 +261,27 @@ async function renderGalleryPage(clientId) {
   // Grid uses the lighter "standard" image (saves data on 3G); HD is used only for download.
   const gridSrc = (p) => p.standard || p.hd || "";
   let rendered = 0;
+  let settled = 0;
+  let overlayHidden = false;
+  const firstBatch = Math.min(BATCH, photos.length);
+
+  function updateProgress() {
+    const total = photos.length;
+    if (!overlayHidden) {
+      setLoader(`Loading your photos… ${Math.min(settled, firstBatch)} / ${firstBatch}`, firstBatch ? (settled / firstBatch) * 100 : 100);
+      if (settled >= firstBatch) { overlayHidden = true; setTimeout(hideLoader, 300); }
+    }
+    const box = $("#loadProgress"), txt = $("#loadProgressText"), bar = $("#loadProgressBar");
+    if (!box) return;
+    if (settled >= total) {
+      txt.textContent = `All ${total} photos loaded ✓`;
+      bar.style.width = "100%";
+      setTimeout(() => box.classList.add("hidden"), 1800);
+    } else {
+      txt.textContent = `Loading photos… ${settled} / ${total}`;
+      bar.style.width = (settled / total) * 100 + "%";
+    }
+  }
 
   const sentinel = document.createElement("div");
   sentinel.className = "photo-sentinel";
@@ -278,7 +334,7 @@ async function renderGalleryPage(clientId) {
       `;
       const img = card.querySelector("img");
       let tries = 0, done = false;
-      const end1 = () => { if (!done) { done = true; settle(); } };
+      const end1 = () => { if (!done) { done = true; settled++; updateProgress(); settle(); } };
       img.addEventListener("load", () => {
         img.classList.add("loaded");
         card.classList.remove("is-loading", "is-error");
@@ -316,6 +372,16 @@ async function renderGalleryPage(clientId) {
     io?.unobserve(sentinel); // wait until current batch settles
     renderBatch();
   }
+
+  if (!photos.length) {
+    overlayHidden = true;
+    hideLoader();
+    $("#loadProgress")?.classList.add("hidden");
+  } else {
+    updateProgress();
+  }
+  // Safety: never keep the client stuck on the loading screen.
+  setTimeout(() => { if (!overlayHidden) { overlayHidden = true; hideLoader(); } }, 15000);
 
   if (io) {
     loadMore();
@@ -427,10 +493,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   const ignoredPaths = new Set(["admin.html", "404.html", "favicon.ico", "robots.txt", "sitemap.xml"]);
   const clientId = params.get("client") || (pathSlug && !ignoredPaths.has(pathSlug) && !pathSlug.includes(".") ? pathSlug : "");
 
+  const alreadyAuthed = clientId && sessionStorage.getItem(`audryGalleryAuth:${clientId}`) === "1";
+  if (alreadyAuthed) document.body.insertAdjacentHTML("beforeend", loaderMarkup());
+
   try {
     await refreshClients();
   } catch (error) {
     console.error(error);
+    hideLoader();
     const grid = $("#clientGrid");
     if (grid) grid.innerHTML = `<div class="empty-state"><h2>Gallery service unavailable</h2><p>Firestore could not be loaded. Please try again.</p></div>`;
     return;
